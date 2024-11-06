@@ -207,25 +207,27 @@ PARSER.add_argument(
     help="Enable detailed output.",
 )
 
-ARGS = vars(PARSER.parse_args())
 
-if ARGS["config"] is not None:
-  try:
-    with open(ARGS["config"], "r") as config_file:
-      config_params = yaml.safe_load(config_file)
-    final_args = merge_args_into_config(ARGS, config_params)
+if __name__ == "__main__":
 
-  except FileNotFoundError:
-    print(f"config file {ARGS.config} not found.")
-    final_args = ARGS
-    final_args.pop("config", None)
-else:
-  final_args = ARGS
+    ARGS = vars(PARSER.parse_args())
+    if ARGS["config"] is not None:
+        try:
+            with open(ARGS["config"], "r") as config_file:
+                config_params = yaml.safe_load(config_file)
+                final_args = merge_args_into_config(ARGS, config_params)
 
-if final_args.get("verbose", False):
-  logging.basicConfig(level=logging.INFO)
-else:
-  logging.basicConfig(level=logging.ERROR)
+        except FileNotFoundError:
+            print(f"config file {ARGS.config} not found.")
+            final_args = ARGS
+            final_args.pop("config", None)
+        else:
+            final_args = ARGS
 
-run_arxiv_cleaner(final_args)
-exit(0)
+    if final_args.get("verbose", False):
+        logging.basicConfig(level=logging.INFO)
+    else:
+        logging.basicConfig(level=logging.ERROR)
+
+    run_arxiv_cleaner(final_args)
+    exit(0)

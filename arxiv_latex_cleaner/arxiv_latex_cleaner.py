@@ -26,6 +26,9 @@ import tempfile
 from PIL import Image
 import regex
 
+import logging
+logger = logging.getLogger(__name__)
+
 PDF_RESIZE_COMMAND = (
     'gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dNOPAUSE -dQUIET -dBATCH '
     '-dDownsampleColorImages=true -dColorImageResolution={resolution} '
@@ -495,13 +498,17 @@ def _replace_includesvg(content, svg_inkscape_files):
 
     # search in svg_inkscape split if pdf_tex file is available
     matching_pdf_tex_files = _keep_pattern(
-        svg_inkscape_files, ['/' + svg_filename + '-tex.pdf_tex']
+        # svg_inkscape_files, ['/' + svg_filename + '-tex.pdf_tex']
+        svg_inkscape_files, ['/' + svg_filename + '-raw.pdf']
     )
     if len(matching_pdf_tex_files) == 1:
       options = '' if matchobj.group(1) is None else matchobj.group(1)
       res = f'\\includeinkscape{options}{{{matching_pdf_tex_files[0]}}}'
       return res
     else:
+      logger.warning(
+          'SVG file %s not found in svg-inkscape folder.', svg_filename
+      )
       return matchobj.group(0)
 
   content = regex.sub(r'\\includesvg(\[.*?\])?{(.*?)}', repl_svg, content)
