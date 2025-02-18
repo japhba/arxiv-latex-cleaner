@@ -209,7 +209,6 @@ PARSER.add_argument(
 
 
 if __name__ == "__main__":
-
     ARGS = vars(PARSER.parse_args())
     if ARGS["config"] is not None:
         try:
@@ -221,8 +220,8 @@ if __name__ == "__main__":
             print(f"config file {ARGS.config} not found.")
             final_args = ARGS
             final_args.pop("config", None)
-        else:
-            final_args = ARGS
+    else:
+        final_args = ARGS
 
     if final_args.get("verbose", False):
         logging.basicConfig(level=logging.INFO)
