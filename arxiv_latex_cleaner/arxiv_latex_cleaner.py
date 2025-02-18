@@ -783,6 +783,8 @@ def run_arxiv_cleaner(parameters):
       r'\.auxlock$',
       r'\.fls$',
       r'\.fdb_latexmk$',
+      r'\.lyx$',
+      r'\.pdf_tex$',
   ]
 
   if not parameters['keep_bib']:
